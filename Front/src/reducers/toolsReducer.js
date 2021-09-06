@@ -19,6 +19,7 @@ const initialState = {
   redirect: false,
   redirectLogIn: false,
   loadLogIn: false,
+  flashLogIn: 'null',
   hiddenNavBar: false,
   loadAddTruck: false,
   flashAddTruck: 'null',
@@ -81,6 +82,11 @@ function toolsReducer(state = initialState, action = {}) {
             ...state,
             loadContact: action.newValue,
           };
+        case 'login':
+          return {
+            ...state,
+            loadLogIn: action.newValue,
+          };
         default:
           return state;
       }
@@ -118,6 +124,11 @@ function toolsReducer(state = initialState, action = {}) {
             flashCreateUser: action.newValue,
           };
         case 'contact':
+          return {
+            ...state,
+            flashContact: action.newValue,
+          };
+        case 'login':
           return {
             ...state,
             flashContact: action.newValue,

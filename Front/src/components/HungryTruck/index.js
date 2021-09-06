@@ -39,6 +39,7 @@ const HungryTruck = ({
   flashSaveEditUser,
   flashCreateUser,
   flashContact,
+  flashLogIn,
   changeShowFlash,
 }) => {
   function showError(message) {
@@ -113,6 +114,14 @@ const HungryTruck = ({
     showError('Une erreur c\'est produite, veuillez réessayer');
     changeShowFlash('null', 'contact');
   }
+  if (flashLogIn === 'redirect') {
+    changeShowFlash('success', 'login');
+    return <Redirect to="/" />;
+  }
+  if (flashLogIn === 'error') {
+    showError('Adresse email ou mot de passe incorrects, veuillez réessayer');
+    changeShowFlash('null', 'login');
+  }
   const [delAccount, setDelAccount] = useState(false);
   const [addFoodTruck, setAddFoodTruck] = useState(false);
   const [foodtruckDetails, setFoodtruckDetails] = useState(false);
@@ -139,6 +148,10 @@ const HungryTruck = ({
     if (flashContact === 'success') {
       showSuccess('Votre message à bien été envoyé');
       changeShowFlash('null', 'createUser');
+    }
+    if (flashLogIn === 'success') {
+      showSuccess('Connexion réussie. A table ! 🍔');
+      changeShowFlash('null', 'login');
     }
   });
   useEffect(() => {

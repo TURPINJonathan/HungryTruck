@@ -19,43 +19,44 @@ const LogIn = ({
   loadLogIn,
   isSuccessLogIn,
   changeIsSuccessLogin,
+  changeIsLoading,
 }) => {
-  function showError() {
-    toast.error('Adresse email ou mot de passe incorrects, veuillez réessayer', {
-      position: 'top-center',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'colored',
-    });
-  }
-  function showSuccess() {
-    toast.success('Connexion réussie. A table ! 🍔', {
-      position: 'top-center',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'colored',
-    });
-  }
-  if (tokenIsOk) {
-    return <Redirect to="/" />;
-  }
-  if (isSuccessLogIn) {
-    showSuccess();
-    changeIsSuccessLogin(null);
-  }
-  if (isSuccessLogIn === false) {
-    showError();
-    changeIsSuccessLogin(null);
-  }
-
+  // function showError() {
+  //   toast.error('Adresse email ou mot de passe incorrects, veuillez réessayer', {
+  //     position: 'top-center',
+  //     autoClose: 3000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //     theme: 'colored',
+  //   });
+  // }
+  // function showSuccess() {
+  //   toast.success('Connexion réussie. A table ! 🍔', {
+  //     position: 'top-center',
+  //     autoClose: 3000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //     theme: 'colored',
+  //   });
+  // }
+  // if (tokenIsOk) {
+  //   return <Redirect to="/" />;
+  // }
+  // if (isSuccessLogIn) {
+  //   showSuccess();
+  //   changeIsSuccessLogin('null');
+  // }
+  // if (isSuccessLogIn === false) {
+  //   showError();
+  //   changeIsSuccessLogin('null');
+  // }
+  console.log('test');
   // const notify = () => toast.success(messageLogIn, {
   //   position: 'top-center',
   //   autoClose: 5000,
@@ -72,8 +73,10 @@ const LogIn = ({
       <form
         className="login-form"
         onSubmit={(evt) => {
+          console.log('onva submit le form');
           evt.preventDefault();
-          loadingLogIn();
+          // loadingLogIn();
+          changeIsLoading(true, 'login');
           handleSubmit();
         }}
       >
