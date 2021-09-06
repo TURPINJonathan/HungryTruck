@@ -6,7 +6,7 @@ use App\Entity\Faq;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class FaqCrudController extends AbstractCrudController
@@ -22,7 +22,7 @@ class FaqCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('question'),
-            TextEditorField::new('reponse'),
+            TextareaField::new('reponse'),
             DateTimeField::new('created_at')->hideOnForm(),
             DateTimeField::new('updated_at')->hideOnForm()
         ];
