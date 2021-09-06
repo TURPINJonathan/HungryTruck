@@ -131,7 +131,7 @@ function toolsReducer(state = initialState, action = {}) {
         case 'login':
           return {
             ...state,
-            flashContact: action.newValue,
+            flashLogIn: action.newValue,
           };
         default:
           return state;

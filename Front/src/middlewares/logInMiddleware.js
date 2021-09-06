@@ -5,7 +5,6 @@ import {
   connectUser,
   connectPro,
   saveUser,
-  changeIsSuccessLogin,
 } from '../actions/logIn';
 import { sendTruck } from '../actions/map';
 import { loadingMap, changeIsLoading, changeShowFlash } from '../actions/tools';
@@ -70,7 +69,7 @@ const createUserMiddleware = (store) => (next) => (action) => {
       )
         .then((response) => {
           localStorage.setItem('token', response.data.token);
-          store.dispatch(saveUser());
+          // store.dispatch(saveUser());
           // store.dispatch(changeIsSuccessLogin(true));
           store.dispatch(changeIsLoading(false, 'login'));
           store.dispatch(changeShowFlash('redirect', 'login'));
