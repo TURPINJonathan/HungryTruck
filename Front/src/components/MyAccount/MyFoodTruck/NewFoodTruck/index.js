@@ -13,11 +13,21 @@ import {
 import Loader from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Logo from '../../../../assets/img/logo.png';
 
 // == Import
 import './newfoodtruck.scss';
 
+const customStyles = {
+  content: {
+    top: '15%',
+    left: '0',
+    bottom: '25%',
+    width: '100vw',
+    height: '100vh',
+    background: 'transparent',
+    border: 'none',
+  },
+};
 // == Composant
 const NewFoodTruck = ({
   addFoodTruck,
@@ -42,18 +52,12 @@ const NewFoodTruck = ({
     findFood();
   }, []);
 
-  let goodPicture = Logo;
-  if (picture.length > 0) {
-    console.log(picture.length);
-    goodPicture = picture;
-  }
   return (
     <section className="section-newFoodTruck">
       <h2 className="newFoodTruck-title">Créer mon FoodTruck</h2>
       <img
         className="newFoodTruck-picture"
-        src={goodPicture}
-        alt="food truck"
+        src={picture}
       />
       <form
         className="newFoodTruck"

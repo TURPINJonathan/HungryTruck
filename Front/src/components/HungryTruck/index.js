@@ -83,11 +83,11 @@ const HungryTruck = ({
     changeShowFlash('null', 'addEvent');
   }
   if (flashDelEvent === 'error') {
-    showError('Une erreur s\'est produite, veuillez réessayer');
+    showError('Une erreur c\'est produite, veuillez réessayer');
     changeShowFlash('null', 'delEvent');
   }
   if (flashDelTruck === 'error') {
-    showError('Une erreur s\'est produite, veuillez réessayer');
+    showError('Une erreur c\'est produite, veuillez réessayer');
     changeShowFlash('null', 'delTruck');
   }
   if (flashSaveEditUser === 'redirect') {
@@ -95,7 +95,7 @@ const HungryTruck = ({
     return <Redirect to="/my-account" />;
   }
   if (flashSaveEditUser === 'error') {
-    showError('Une erreur s\'est produite, veuillez réessayer');
+    showError('Une erreur c\'est produite, veuillez réessayer');
     changeShowFlash('null', 'editUser');
   }
   if (flashCreateUser === 'redirect') {
@@ -111,7 +111,7 @@ const HungryTruck = ({
     return <Redirect to="/" />;
   }
   if (flashContact === 'error') {
-    showError('Une erreur s\'est produite, veuillez réessayer');
+    showError('Une erreur c\'est produite, veuillez réessayer');
     changeShowFlash('null', 'contact');
   }
   if (flashLogIn === 'redirect') {
@@ -119,7 +119,7 @@ const HungryTruck = ({
     return <Redirect to="/" />;
   }
   if (flashLogIn === 'error') {
-    showError('Adresse email ou mot de passe incorrect, veuillez réessayer');
+    showError('Adresse email ou mot de passe incorrects, veuillez réessayer');
     changeShowFlash('null', 'login');
   }
   const [delAccount, setDelAccount] = useState(false);
@@ -138,7 +138,7 @@ const HungryTruck = ({
       changeShowFlash('null', 'addEvent');
     }
     if (flashSaveEditUser === 'success') {
-      showSuccess('Les informations on bien été mises à jour');
+      showSuccess('Les informations on bien été mise à jour');
       changeShowFlash('null', 'editUser');
     }
     if (flashCreateUser === 'success') {
@@ -146,8 +146,8 @@ const HungryTruck = ({
       changeShowFlash('null', 'createUser');
     }
     if (flashContact === 'success') {
-      showSuccess('Votre message a bien été envoyé');
-      changeShowFlash('null', 'contact');
+      showSuccess('Votre message à bien été envoyé');
+      changeShowFlash('null', 'createUser');
     }
     if (flashLogIn === 'success') {
       showSuccess('Connexion réussie. A table ! 🍔');
