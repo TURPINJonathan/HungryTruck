@@ -75,6 +75,12 @@ class FoodTruckController extends AbstractController
         $foodtruck = $serializer->deserialize($jsonContent, Foodtruck::class, 'json');
         // on vient ajouter automatiquement user_id donc -> l'user qui add un foodtruck
         $foodtruck->setUser($this->getUser());
+
+        if($foodtruck->getPicture() == null){
+
+            $foodtruck->setPicture("https://i.ibb.co/kggSPWy/logo-FINAL.png");
+        }
+
         // On valide l'entité avec le service Validator
         $errors = $validator->validate($foodtruck);
 
