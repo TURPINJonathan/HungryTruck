@@ -72,13 +72,6 @@ const NewAccount = ({
   useEffect(() => {
     findFood();
   }, []);
-
-  let goodPictureUser = 'https://cdn.shopify.com/s/files/1/0563/4061/1245/files/4451366_meme-man-harold-thumbs-up-png-download_png_647a504f-091e-452f-aaad-20f6591c2821_600x600@2x.jpg?v=1619114473';
-  if (pictureUser.length > 0) {
-    console.log(pictureUser.length);
-    goodPictureUser = pictureUser;
-  }
-
   return (
     <main className="newaccount">
       <h1 className="newaccount-title">{title}</h1>
@@ -96,7 +89,7 @@ const NewAccount = ({
         }}
       >
         <div className="form-left">
-          <img className="avatar" src={goodPictureUser} alt="Avatar" />
+          <img className="avatar" src={pictureUser} alt="Avatar" />
           <label className="form-label--avatar" htmlFor="avatar">Lien de votre image de profil*
             <input
               type="text"
