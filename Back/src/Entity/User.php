@@ -47,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Assert\NotBlank
-     * @Assert\Regex(pattern="/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&-\/])[A-Za-z\d@$!%*#?&-\/]{8,20}$/", message="Votre mot de passe doit contenir au moins un caractère minuscle, un caractère majuscule, un chiffre, un signe spécial de @#-_$%^&+=§ !? et entre 8 et 20 caractères")
+     * @Assert\Regex("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&-\/])[A-Za-z\d@$!%*#?&-\/]{8,20}$/", message="Votre mot de passe doit contenir au moins un caractère minuscle, un caractère majuscule, un chiffre, un signe spécial de @#-_$%^&+=§ !? et entre 8 et 20 caractères")
      * @Assert\NotCompromisedPassword
      * @Groups({"created_user","delete_user"})
      */
