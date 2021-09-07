@@ -53,25 +53,12 @@ class UserController extends AbstractController
         // On désérialise le JSON vers une entité User
         $user = $serializer->deserialize($jsonContent, User::class, 'json');
 
-        if(!preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&-\/])[A-Za-z\d@$!%*#?&-\/]{8,20}$/', $user->getPassword())) {
-
-            $error = 'Votre mot de passe doit contenir au moins un caractère minuscle, un caractère majuscule, un chiffre, un signe spécial de @#-_$%^&+=§ !? et entre 8 et 20 caractères';
-
-            return $this->json(['error' => $error], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        if($user->getPassword() == null)
-        {
-            $error = 'Votre mot de passe doit contenir au moins un caractère minuscle, un caractère majuscule, un chiffre, un signe spécial de @#-_$%^&+=§ !? et entre 8 et 20 caractères';
-
-            return $this->json(['error' => $error], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        
+        // On valide l'entité avec le service Validator
+        $errors = $validator->validate($user);
 
 
         $user->setPassword($hasher->hashPassword($user, $user->getPassword()));
-
-        // On valide l'entité avec le service Validator
-        $errors = $validator->validate($user);
 
         
         if (count($errors) > 0) {
