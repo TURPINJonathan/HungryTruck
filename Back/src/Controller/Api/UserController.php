@@ -83,7 +83,7 @@ class UserController extends AbstractController
      * @Route("/api/user/edit", name="api_user_edit", methods={"PUT"})
      * @IsGranted("ROLE_USER")
      */
-    public function itemEdit(User $user = null, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager, Request $request): Response
+    public function itemEdit(User $user = null, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager, Request $request,UserPasswordHasherInterface $hasher): Response
     {
 
         $user = $this->getUser();
@@ -97,9 +97,8 @@ class UserController extends AbstractController
 
 
         $data = $request->getContent();
-
         $user = $serializer->deserialize($data, User::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
-
+        
         // On valide l'entité
         $errors = $validator->validate($user);
 
