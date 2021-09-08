@@ -23,7 +23,6 @@ class ProController extends AbstractController
      */
     public function show(User $user = null): Response
     {
-
         $user = $this->getUser();
 
         if ($user === null) {
@@ -46,11 +45,10 @@ class ProController extends AbstractController
      * @Route("/api/pro/edit", name="api_pro_edit", methods={"PUT"})
      * @IsGranted("ROLE_PRO")
      */
-    public function itemEdit(User $user = null, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager, Request $request): Response
+    public function itemEdit(User $user = null, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager, Request $request, UserPasswordHasherInterface $hasher): Response
     {
         $user = $this->getUser();
-    
-        // Pro non trouvé
+        // User non trouvé
         if ($user === null) {
             return new JsonResponse(
                 ["message" => "User non trouvé"],
@@ -58,27 +56,57 @@ class ProController extends AbstractController
             );
         }
 
-
         $data = $request->getContent();
-        $user = $serializer->deserialize($data, User::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
 
-        // On valide l'entité
-        $errors = $validator->validate($user);
+        // Condition si il l'utilisateur modifie sont mot de passe ou non !
+        $array = json_decode($data, true);
 
-        // Affichage des erreurs
-        if (count($errors) > 0) {
-            $newErrors = [];
+        if (array_key_exists('password', $array)) {
+            $data = json_encode($array);
 
-            foreach ($errors as $error) {
-                $newErrors[$error->getPropertyPath()][] = $error->getMessage();
+            $user = $serializer->deserialize($data, User::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
+
+            // On valide l'entité
+            $errors = $validator->validate($user);
+
+            $user->setPassword($hasher->hashPassword($user, $user->getPassword()));
+
+            // Affichage des erreurs
+            if (count($errors) > 0) {
+                $newErrors = [];
+
+                foreach ($errors as $error) {
+                    $newErrors[$error->getPropertyPath()][] = $error->getMessage();
+                }
+
+                return new JsonResponse(["errors" => $newErrors], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
-            return new JsonResponse(["errors" => $newErrors], Response::HTTP_UNPROCESSABLE_ENTITY);
+            // Enregistrement en BDD
+            $entityManager->flush();
+
+            return new JsonResponse(["message" => "User modifié"], Response::HTTP_OK);
+        } else {
+            $user = $serializer->deserialize($data, User::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
+
+            // On valide l'entité
+            $errors = $validator->validate($user);
+
+            // Affichage des erreurs
+            if (count($errors) > 0) {
+                $newErrors = [];
+
+                foreach ($errors as $error) {
+                    $newErrors[$error->getPropertyPath()][] = $error->getMessage();
+                }
+
+                return new JsonResponse(["errors" => $newErrors], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            // Enregistrement en BDD
+            $entityManager->flush();
+
+            return new JsonResponse(["message" => "User modifié"], Response::HTTP_OK);
         }
-
-        // Enregistrement en BDD
-        $entityManager->flush();
-
-        return new JsonResponse(["message" => "User modifié"], Response::HTTP_OK);
     }
 }

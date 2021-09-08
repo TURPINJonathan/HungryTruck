@@ -25,7 +25,7 @@ class UserController extends AbstractController
      */
     public function show(User $user = null): Response
     {
-        
+
         $user = $this->getUser();
 
         if ($user === null) {
@@ -34,7 +34,7 @@ class UserController extends AbstractController
                 Response::HTTP_NOT_FOUND
             );
         }
-        
+
 
         // /!\ TODO: JSON Hijacking fail 
         return $this->json($user, Response::HTTP_OK, [], ['groups' => 'user_get_by_id']);
@@ -53,14 +53,14 @@ class UserController extends AbstractController
         // On désérialise le JSON vers une entité User
         $user = $serializer->deserialize($jsonContent, User::class, 'json');
 
-        
+
         // On valide l'entité avec le service Validator
         $errors = $validator->validate($user);
 
 
         $user->setPassword($hasher->hashPassword($user, $user->getPassword()));
 
-        
+
         if (count($errors) > 0) {
             $newErrors = [];
 
@@ -76,14 +76,14 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->json($user, Response::HTTP_CREATED,[],['groups'=> 'created_user']);
+        return $this->json($user, Response::HTTP_CREATED, [], ['groups' => 'created_user']);
     }
 
     /**
      * @Route("/api/user/edit", name="api_user_edit", methods={"PUT"})
      * @IsGranted("ROLE_USER")
      */
-    public function itemEdit(User $user = null, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager, Request $request,UserPasswordHasherInterface $hasher): Response
+    public function itemEdit(User $user = null, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager, Request $request, UserPasswordHasherInterface $hasher): Response
     {
 
         $user = $this->getUser();
@@ -95,28 +95,61 @@ class UserController extends AbstractController
             );
         }
 
-
         $data = $request->getContent();
-        $user = $serializer->deserialize($data, User::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
-        
-        // On valide l'entité
-        $errors = $validator->validate($user);
 
-        // Affichage des erreurs
-        if (count($errors) > 0) {
-            $newErrors = [];
+        // Condition si il l'utilisateur modifie sont mot de passe ou non !
+        $array = json_decode($data, true);
 
-            foreach ($errors as $error) {
-                $newErrors[$error->getPropertyPath()][] = $error->getMessage();
+        if (array_key_exists('password', $array)) {
+
+            $data = json_encode($array);
+
+            $user = $serializer->deserialize($data, User::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
+
+            $user->setPassword($hasher->hashPassword($user, $user->getPassword()));
+
+            // On valide l'entité
+            $errors = $validator->validate($user);
+
+            // Affichage des erreurs
+            if (count($errors) > 0) {
+                $newErrors = [];
+
+                foreach ($errors as $error) {
+                    $newErrors[$error->getPropertyPath()][] = $error->getMessage();
+                }
+
+                return new JsonResponse(["errors" => $newErrors], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
-            return new JsonResponse(["errors" => $newErrors], Response::HTTP_UNPROCESSABLE_ENTITY);
+            // Enregistrement en BDD
+            $entityManager->flush();
+
+            return new JsonResponse(["message" => "User modifié"], Response::HTTP_OK);
         }
+        else{
 
-        // Enregistrement en BDD
-        $entityManager->flush();
+            $user = $serializer->deserialize($data, User::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
 
-        return new JsonResponse(["message" => "User modifié"], Response::HTTP_OK);
+            // On valide l'entité
+            $errors = $validator->validate($user);
+
+            // Affichage des erreurs
+            if (count($errors) > 0) {
+                $newErrors = [];
+
+                foreach ($errors as $error) {
+                    $newErrors[$error->getPropertyPath()][] = $error->getMessage();
+                }
+
+                return new JsonResponse(["errors" => $newErrors], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            // Enregistrement en BDD
+            $entityManager->flush();
+
+            return new JsonResponse(["message" => "User modifié"], Response::HTTP_OK);
+        }
     }
     /**
      * Delete a User
@@ -138,6 +171,6 @@ class UserController extends AbstractController
         $em->remove($user);
         $em->flush();
 
-        return $this->json(['message' => 'L\'Utilisateur a bien été supprimé.'], Response::HTTP_OK,[],['groups' => 'delete_user']);
+        return $this->json(['message' => 'L\'Utilisateur a bien été supprimé.'], Response::HTTP_OK, [], ['groups' => 'delete_user']);
     }
 }
